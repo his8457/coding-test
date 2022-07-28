@@ -55,29 +55,46 @@ public class Main_10757 {
 			A = addZeroString(A, B.length() - A.length());
 		}
 		
-		//4.문자열의 가장 끝의 숫자부터 A, B값을 더하고 10보다 크다면 다음자리의 수에 1을 더한다.
+		//4.두 수의 가장 끝자리숫자(1의 자리수)부터 A, B값을 더하고 10보다 크다면 다음자리의 수에 1을 더한다.
+		int carry = 0; //받아올림수 : 자리수의 합이 10보다 크면 1 작으면 0
 		for(int i = A.length()-1; i >= 0; i--) {
 			char aNum = A.charAt(i);
 			char bNum = B.charAt(i);
 			
-			if(A.length() == 1) {//문자열 전체 길이가 한자리일 경우 예) A:5 , B:7
-				sum.append(sumCharacters(aNum, bNum));
+			if(A.length() == 1) {//두 수의 길이가 한자리일 경우 예) A:5 , B:7
+				sum.append(sumCharacters(aNum, bNum, carry));
 				break;
 			}
 			
-			if(i == A.length()-1) {//1의자리 덧셈인 경우
-				sum.append(sumCharacters(aNum, bNum) % 10);//1의 자리수에 들어갈 값
-			}else if(i == 0) {//최고자리 덧셈인 경우
-				if(sumCharacters(A.charAt(i+1), B.charAt(i+1)) >= 10) {
-					sum.append(sumCharacters(aNum, bNum)+1);//1의 자리수에 들어갈 값
+			if(i == A.length()-1) {//두 수의 1의자리 연산의 경우
+				sum.append(sumCharacters(aNum, bNum, carry) % 10);//1의 자리수에 들어갈 값
+				
+				if(sumCharacters(aNum, bNum, carry) >= 10) {
+					carry = 1;
 				}else {
-					sum.append(sumCharacters(aNum, bNum));//1의 자리수에 들어갈 값
+					carry = 0;
+				}
+			}else if(i == 0) {//두 수의 가장 앞자리(최고자리) 연산의 경우
+				int abSum = sumCharacters(aNum, bNum, carry);
+				StringBuffer sbResult = new StringBuffer();
+				
+				if(abSum >= 10) {
+					sbResult.append(abSum);
+					sum.append(sbResult.reverse());//숫자가 10보다 크면 reverse로 append 해야함. (전체 수를 마지막에 다시 뒤집기 때문에)
+					carry = 1;
+				}else {
+					sum.append(abSum);//숫자가 10보다 작으면 그냥 append 함.
+					carry = 0;
 				}
 			}else {
-				if(sumCharacters(A.charAt(i+1), B.charAt(i+1)) >= 10) {
-					sum.append((sumCharacters(aNum, bNum)+1) % 10);//1의 자리수에 들어갈 값
+				int abSum = sumCharacters(aNum, bNum, carry);
+				
+				if(abSum >= 10) {
+					sum.append(abSum % 10);
+					carry = 1;
 				}else {
-					sum.append(sumCharacters(aNum, bNum) % 10);//1의 자리수에 들어갈 값
+					sum.append(abSum);//숫자가 10보다 작으면 그냥 append 함.
+					carry = 0;
 				}
 			}
 		}
@@ -106,7 +123,11 @@ public class Main_10757 {
 		return zeroNum + number;
 	}
 	
-	private static int sumCharacters(char a, char b) {
-		return (a - '0') + (b - '0');
+	/**
+	 * 파라미터 : char a, char b
+	 * 설명 : 파라미터로 넘어온 문자열을 숫자로 변환 후, 합을 구해 return한다.
+	 * */
+	private static int sumCharacters(char a, char b, int carry) {
+		return (a - '0') + (b - '0') + carry;
 	}
 }
