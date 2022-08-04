@@ -1,8 +1,13 @@
 package baekjoon._04_set_and_map;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Main_10815 {
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception{
 		/*
 		 * 문제
 		 * 숫자 카드는 정수 하나가 적혀져 있는 카드이다. 
@@ -33,7 +38,53 @@ public class Main_10815 {
 		 * 
 		 * */
 		
-		
+		printSolve();
 	}
 
+	private static void printSolve() throws Exception{
+		//1. 입력받을 변수를 선언
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		//2. 카드의 개수만큼 카드에 적힌 숫자를 담는다.
+		int N = Integer.parseInt(br.readLine());
+		String[] strArrN = br.readLine().split(" ");
+		int [] cardNumbers = new int[N];
+
+		for(int i = 0; i < N; i++) {
+			cardNumbers[i] = Integer.parseInt(strArrN[i]);
+		}
+		
+		//3. 비교할 숫자의 개수만큼 배열을 만들고 숫자를 담는다.
+		int M = Integer.parseInt(br.readLine());
+		String[] strArrM = br.readLine().split(" ");
+		int [] ComparativeGroup = new int[M];
+
+		for(int i = 0; i < M; i++) {
+			ComparativeGroup[i] = Integer.parseInt(strArrM[i]);
+		}
+		
+		//4. 결과를 출력할 변수를 선언한다.
+		StringBuffer sb = new StringBuffer();
+		
+		
+		//5. 카드에 적힌 숫자를 map에 담고 비교할 숫자가 담긴 배열과 비교하여 
+		//   해당 숫자가 있으면 1을 없으면 0을 buffer에 담는다.
+		Map<Integer, Integer> map = new HashMap<>();
+		for(int i = 0; i < N; i++) {
+			map.put(cardNumbers[i], cardNumbers[i]);
+		}
+		
+		for(int i = 0; i < M; i++) {
+			if(map.containsKey(ComparativeGroup[i])) {
+				sb.append(1);
+				sb.append(' ');
+			}else {
+				sb.append(0);
+				sb.append(' ');
+			}
+		}
+		
+		//6. 결과를 출력한다.
+		System.out.println(sb.toString());
+	}
 }
