@@ -3,6 +3,7 @@ package baekjoon._03_basic_math2;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Main_4948 {
 	public static void main(String[] args) throws Exception {
@@ -39,58 +40,53 @@ public class Main_4948 {
 		 * 8392
 		 * */
 		
-		printPrimeCount();
-	}
-
-	private static void printPrimeCount() throws Exception{
-		//1. 주어진 수를 입력받을 변수를 선언한다.
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		ArrayList<Integer> inputString = new ArrayList<>();
-		
-		while(true) {
-			int temp = Integer.parseInt(br.readLine());
-			System.out.println(temp);
-			if(temp == 0) {
-				break;
-			}else {
-				inputString.add(temp);
-			}
-		}
-		
-		//2. 결과를 담을 변수를 선언한다.
-		StringBuffer sb = new StringBuffer();
-		
-		//3. 구간을 담을 두 수 N1, N2을 선언한다.
-		int N1, N2, count; 
-		
-		for(int i = 0; i < inputString.size(); i++) {
-			N1 = inputString.get(i); //주어진 수 N
-			N2 = N1 * 2; //주어진 수 2N
-			count = 0;
-			
-			for(int k = N1+1; k <= N2; k++) {
-				if(isPrime(k)) {
-					count++;
-				}
-			}
-			sb.append(count + "\n");
-		}
-		
-		System.out.println(sb.toString());
+//	printPrimeCount();
+		findPrimeNumbers();
 	}
 	
-	private static boolean isPrime(int num) {
-		boolean result = true;
-		if(num == 1) {//1은 소수가 아니므로 제외
-			return false;
-		}
+	/*
+	 * 제한 범위 내의 배열을 미리 선언하고 소수여부를 구해논 후에
+	 * 수가 주어지면 해당 범위 안에 있는 소수의 개수만 센다. 
+	 * */
+	private static void findPrimeNumbers() throws Exception {
+		//1. 0부터 123456*2(246912) 만큼 배열을 만들고 에라토스테네스의 체를 이용하여 소수를 미리 구한다.
+		int N = 246913;
+		boolean[] primeArr = new boolean[N];
+		primeArr[0] = true; //0은 소수가 아님 (특수케이스)
+		primeArr[1] = true; //1은 소수가 아님 (특수케이스)
 		
-		for(int i = 2; i < num; i++) {
-			if(i < num && num % i == 0) {
-				return false;
+		//소수가 아닌수는 배열에서 true로 값을 변경한다.
+		//소수 : false, 소수가 아닌수 : true
+		for(int i = 2; i <= Math.sqrt(N); i++) {
+			if(primeArr[i] == true) {
+				continue;
+			}
+			
+			//에라토스테네스의 체
+			for(int j=i*i; j < N; j=j+i) {
+				primeArr[j] = true;
 			}
 		}
 		
-		return result;
+		//2. 입력받은 수+1 부터 입력받은 수 x 2 까지(포함) 수중 소수인 수의 개수를 센어 출력한다.
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		while(true) {
+			int K = Integer.parseInt(br.readLine());
+			int primeCount = 0;
+
+			if(K == 0) {//입력값이 0이면 종료한다.
+				break;
+			}
+			
+			for(int i=K+1; i <= K*2; i++) {
+				if(primeArr[i] == false) {
+					primeCount++;
+				}
+			}
+			
+			System.out.println(primeCount);
+		}
+		
+		br.close();
 	}
 }
