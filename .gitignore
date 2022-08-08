@@ -1,6 +1,6 @@
 # Created by https://www.toptal.com/developers/gitignore/api/java,windows,eclipse,gradle,macos,intellij+all,visualstudiocode
 # Edit at https://www.toptal.com/developers/gitignore?templates=java,windows,eclipse,gradle,macos,intellij+all,visualstudiocode
-  
+
 ### querydsl
 /src/main/generated
 
@@ -14,6 +14,7 @@ tmp/
 *~.nib
 local.properties
 .settings/
+.settings/org.eclipse.jdt.core.prefs
 .loadpath
 .recommenders
 
