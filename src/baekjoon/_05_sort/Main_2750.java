@@ -1,6 +1,7 @@
 package baekjoon._05_sort;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 
@@ -35,7 +36,33 @@ public class Main_2750 {
 		 *5 
 		 * */
 		
-		solve();
+		//solve(); //Arrays.sort()
+		
+		bubbleSort(); //bubble sort  시간복잡도 O(n^2)
+	}
+
+	private static void bubbleSort() throws NumberFormatException, IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int N = Integer.parseInt(br.readLine());
+		int[] arr = new int[N];
+		
+		for(int i = 0; i < N; i++) {
+			arr[i] = Integer.parseInt(br.readLine());
+		}
+		
+		for(int i = 0; i < arr.length-1; i++) {
+			for(int j = i+1; j <= arr.length-1; j++) {
+				if(arr[i] > arr[j] ) {
+					int temp = arr[j];
+					arr[j] = arr[i];
+					arr[i] = temp;
+				}
+			}
+		}
+		
+		for(int i : arr) {
+			System.out.println(i);
+		}
 	}
 
 	private static void solve() throws Exception{
