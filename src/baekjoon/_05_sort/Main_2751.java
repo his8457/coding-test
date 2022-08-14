@@ -2,7 +2,6 @@ package baekjoon._05_sort;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class Main_2751 {
@@ -34,7 +33,6 @@ public class Main_2751 {
 		 * 4
 		 * 5
 		 * */
-		
 		/*
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int inputCount  = Integer.parseInt(br.readLine());
@@ -45,20 +43,88 @@ public class Main_2751 {
 			arr[i] = Integer.parseInt(br.readLine());
 		}
 		*/
-		int[] arr = {1,5,3,7,2,4,10,8,6,9};
-		//             arr[i] = 3, arr[j] = 5
+		//int[] arr = {1,5,3,7,2,4,10,8,6,9};
 		
-		//int[] arr = {1,3,5,7,2,4,10,8,6,9};
-		//             arr[4] = 2, arr[1] 
+		//solve(); //1. Arrays.sort() -> 시간초과      시간복잡도 : ??
+		//bubbleSort(arr);  //2.Bubble 정렬 -> 시간초과  시간복잡도 : O(n^2)
+		//simpleSelectSort(arr); //3.단순선택정렬 -> 시간초과  시간복잡도 : O(n^2)
+		//simpleInsertSort(arr); //4.단순삽입정렬 -> 시간초과 시간복잡도 : O(n^2)
+		//shellSort(arr); //5.셸 정렬 -> 맞음  시간복잡도 : O(n^1.25)
+		//quickSort(arr, 0, arr.length-1); //6.퀵 정렬 -> 시간초과  시간복잡도 : O(nlogn) -> 최고 나쁠경우 O(n^2)
 		
-		//solve(); //1. Arrays.sort() -> 시간초과
-		//bubbleSort(arr);  //2.Bubble 정렬 -> 시간초과
-		//simpleSelectSort(arr); //3.단순선택정렬 -> 시간초과
-		simpleInsertSort(arr); //4.단순삽입정렬 ->
+		countingSort();
 		
-		//quickSort();
+		//printResult(arr);
+		
+	}
+	
+	// 
+	private static void countingSort() throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		StringBuilder sb = new StringBuilder();
+        
+		boolean[] arr = new boolean[2000001];	
+        
+		int N = Integer.parseInt(br.readLine());
+        
+		for(int i = 0; i < N; i++) {
+			arr[Integer.parseInt(br.readLine()) + 1000000] = true;
+		}
+ 
+		for(int i = 0; i < arr.length; i++) {
+			if(arr[i]) {
+				sb.append((i - 1000000)).append('\n');
+			}
+		}
+		System.out.print(sb);
+	}
+	
+	//6.퀵 정렬
+	private static void quickSort(int[] arr, int left, int right) {
+		int n = arr.length;
+		
+		int pl = left; //왼쪽 시작인덱스
+		int pr = right; //오른쪽 시작인덱스
+		int x = arr[(pl + pr) / 2]; //pivot 
+		
+		do {
+			while(arr[pl] < x)pl++;
+			while(arr[pr] > x)pr--;
+			if(pl <= pr) {
+				int idx1 = pl++;
+				int idx2 = pr--;
+				int t = arr[idx1];
+				arr[idx1] = arr[idx2];
+				arr[idx2] = t;
+			}
+		}while (pl <= pr);
+		
+		if(left < pr) {
+			quickSort(arr, left, pr);
+		}
+		
+		if(pl < right) {
+			quickSort(arr, pl, right);
+		}
 	}
 
+	//5.셀 정렬
+	private static void shellSort(int[] arr) {
+		int n = arr.length;
+		
+		for(int h = n / 2; h > 0; h /= 2) {
+			for(int i = h; i < n; i++) {
+				int j;
+				int tmp = arr[i];
+				for(j = i - h; j >= 0 && arr[j] > tmp; j -= h) {
+					arr[j+h] = arr[j];
+				}
+				arr[j+h] = tmp;
+			}
+		}
+	}
+
+	//4.단순삽입정렬
 	private static void simpleInsertSort(int[] arr) {
 		//2번째 인덱스부터 앞쪽 인덱스에 비교한 후, 적합한 인덱스에 삽입한다.
 		for(int i = 1; i < arr.length; i++) {
@@ -67,6 +133,7 @@ public class Main_2751 {
 			for(int j = i-1; j >= 0; j--) {
 				if(arr[i] > arr[j]) {
 					index = j+1;
+					break;
 				}
 			}
 			
@@ -80,10 +147,9 @@ public class Main_2751 {
 			
 			arr[index] = tempValue;
 		}
-		
-		System.out.println(Arrays.toString(arr));
 	}
-
+	
+	//3.단순선택정렬
 	private static void simpleSelectSort(int[] arr) {
 		for(int i = 0; i < arr.length-1; i++) {
 			//최소값을 찾는다.
@@ -101,10 +167,9 @@ public class Main_2751 {
 			arr[i] = minValue;
 			arr[minIndex] = tempValue;
 		}
-		
-		System.out.println(Arrays.toString(arr));
 	}
-
+	
+	//2.버블정렬
 	private static void bubbleSort(int[] arr) {
 		for(int i = arr.length-1; i > 0; i--) {
 			for(int j = i-1; j >= 0; j--) {
@@ -116,34 +181,19 @@ public class Main_2751 {
 				}
 			}
 		}
-		
-		System.out.println(Arrays.toString(arr));
 	}
-
-	private static void quickSort(int[] arr) throws Exception {
-		/*
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		int inputCount  = Integer.parseInt(br.readLine());
-		
-		int[] arr = new int[inputCount];
-		
-		for(int i = 0; i < inputCount; i++) {
-			arr[i] = Integer.parseInt(br.readLine());
-		}
-		*/
-		
-		
-		// {5 2 1 4 3}
-		// 1
-		// 
-		
-	}
-
-	private static void solve(int[] arr) throws Exception {
+	
+	//1.Arrays.sort(); 
+	private static void solve(int[] arr) {
 		Arrays.sort(arr);
-		
-		for(int i : arr) {
-			System.out.println(i);
+	}
+	
+	// ★★★출력★★★
+	private static void printResult(int[] arr) {
+		StringBuilder sb = new StringBuilder();
+		for(int a : arr) {
+			sb.append(a + "\n");
 		}
+		System.out.println(sb);
 	}
 }
