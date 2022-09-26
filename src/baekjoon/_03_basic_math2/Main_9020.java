@@ -1,10 +1,10 @@
 package baekjoon._03_basic_math2;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 
 public class Main_9020 {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		//[백준] 9020 기본수학2 -> 골드바흐의 추측
 		/*
 		 * 문제
@@ -33,6 +33,7 @@ public class Main_9020 {
 		 * 8
 		 * 10
 		 * 16
+		 * 
 		 * 예제 출력 1 
 		 * 3 5
 		 * 5 5
@@ -42,11 +43,9 @@ public class Main_9020 {
 		sovle();
 	}
 
-	private static void sovle() {
+	private static void sovle() throws Exception {
 		//1.10000이하의 소수를 에라토스테네스의 체를 이용하여 구한다.
 		boolean[] primeArr = new boolean[10001]; //배열의 index는 자연수를 의미한다.
-		
-		primeArr[1] = true; //1은 소수가 아님
 		
 		//소수가 아닌 index를 찾아 true로 값을 치환한다.
 		for(int i = 2; i < primeArr.length; i++) {
@@ -61,24 +60,25 @@ public class Main_9020 {
 			}
 		}
 		
-		/*
-		for(int i = 2; i<primeArr.length; i++) {
-			if(primeArr[i] == false) {
-				System.out.println(i);
-			}
-		}
-		*/
+		//2.문제 개수
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		int questionsCount = Integer.parseInt(br.readLine()); //문제 개수
 		
-		int n = 8;
-		Map<Integer, Integer> map = new HashMap<>(); 
-		for(int i = 2; i < primeArr.length; i++) {
-			if(primeArr[i] == false) {
-				if(primeArr[n - i] == false) {
-					map.put(i, n-i);
+		while(questionsCount > 0) {
+			int input = Integer.parseInt(br.readLine());
+			int num1 = input / 2;
+			int num2 = input / 2;
+			
+			while(true) {
+				if(primeArr[num1] == false && primeArr[num2] == false) {
+					System.out.println(num1 + " " + num2);
+					break;
 				}
+				
+				num1--;
+				num2++;
 			}
+			questionsCount--;
 		}
-		
-		System.out.println(map.size());
 	}
 }
