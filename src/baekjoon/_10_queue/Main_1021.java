@@ -1,4 +1,4 @@
-package baekjoon._05_sort;
+package baekjoon._10_queue;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
