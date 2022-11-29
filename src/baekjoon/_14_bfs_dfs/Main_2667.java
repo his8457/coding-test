@@ -1,67 +1,72 @@
 package baekjoon._14_bfs_dfs;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 
 public class Main_2667 {
 	
-	public static int[][] map = {{0,1,0,1},
-							     {1,1,0,1},
-							     {1,1,1,0},
-							     {1,0,0,0}};
+	public static int[][] map = null;
+	public static boolean[][] visited = null;
+	public static int[] houseCntList = null;
 	
-	public static int mapSize = map.length;
-	public static boolean[][] visited = new boolean[mapSize][mapSize];
-	
+	public static int mapSize = 0;
 	public static int groupCnt = 0;
 	public static int houseCnt = 0;
 	
-	public static int[] dirX = {0, 0, -1, 1}; //위, 아래, 왼쪽, 오른쪽
-	public static int[] dirY = {1, -1, 0, 0}; //위, 아래, 왼쪽, 오른쪽
-	
-	public static int nextX = 0;
-	public static int nextY = 0;
-	
-	public static void main(String[] args) {
-		//처음 찾은 집을 기준으로 연결된 집들의 배열 번호를 5로 치환
-		//고려할 사항 : 1. 행렬의 모서리에 위치한 집은 4방향으로 탐색 불가
+	public static void main(String[] args) throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
+		//지도 크기 N
+		mapSize = Integer.parseInt(br.readLine());
+		//지도 배열
+		map = new int[mapSize][mapSize];
+		//지도 배열 (방문 여부)
+		visited = new boolean[mapSize][mapSize];
+		//단지별 집 수
+		houseCntList = new int[mapSize * mapSize];
+		
+		//지도
 		for(int i = 0; i < mapSize; i++) {
-			for(int j = 0; j < mapSize; j++) {
-				groupCnt++;
-				System.out.println("groupCnt : " + groupCnt + ", [i][j] : [" + i + "][" + j + "]");
-				dfs(i, j);
+			String s = br.readLine();
+			for(int j = 0; j < s.length(); j++) {
+				map[i][j] = s.charAt(j) - '0';
 			}
 		}
 		
-		for(int i[] : map) {
-			System.out.println(Arrays.toString(i));
+		// 1. DFS 탐색 시작
+		for(int i = 0; i < mapSize; i++) {
+			for(int j = 0; j < mapSize; j++) {
+				if(map[i][j] == 1 && !visited[i][j]) {
+					groupCnt++;
+					houseCnt = 0;
+					dfs(i, j);
+					houseCntList[groupCnt] = houseCnt;
+				}
+			}
+		}
+		
+		// 2. 결과 출력
+		System.out.println(groupCnt);
+		Arrays.sort(houseCntList);
+		for(int i = 0; i < houseCntList.length; i++) {
+			if(houseCntList[i] > 0) {
+				System.out.println(houseCntList[i]);
+			}
 		}
 	}
 
-	public static boolean canSearch(int x, int y, int idx) {
-		boolean result = true;
-		
-		int moveX = x + dirX[idx];
-		int moveY = y + dirY[idx];
-		System.out.println("moveX : " + moveX + ", moveY : " + moveY + ", canSearch : " + (moveX < 0 || moveY < 0 || moveX >= mapSize || moveY >= mapSize));
-		if(moveX < 0 || moveY < 0 || moveX >= mapSize || moveY >= mapSize) {
-			return false;
-		}
-		
-		nextX = moveX;
-		nextY = moveY;
-		
-		return result;
-	}
-	
 	public static void dfs (int x, int y) {
-		for(int i = 0; i < 4; i++) {
-			if(canSearch(x, y, i) && !visited[nextX][nextY] && map[nextX][nextY] == 1) {
-				visited[nextX][nextY] = true;
-				map[nextX][nextY] = groupCnt;
-				houseCnt++;
-				dfs(nextX, nextY);
-			}
+		if(x < 0 || y < 0 || x >= mapSize || y >= mapSize || visited[x][y] == true || map[x][y] == 0) {
+			return;
 		}
+		
+		visited[x][y] = true;
+		houseCnt++;
+		
+		dfs(x - 1, y); // 왼쪽 한칸 이동
+		dfs(x + 1, y); // 오른쪽 한칸 이동
+		dfs(x, y + 1); // 위로 한칸 이동
+		dfs(x, y - 1); // 아래로 한칸 이동
 	}
 }
