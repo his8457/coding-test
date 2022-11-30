@@ -3,15 +3,15 @@ package baekjoon._05_sort;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Main_2108 {
 	public static void main(String[] args) throws Exception {
-		//[백준] 2108 정렬 -> 통계학
+		// [백준] 정렬 : 통계학
 		/*
 		 * 문제
 			수를 처리하는 것은 통계학에서 상당히 중요한 일이다. 통계학에서 N개의 수를 대표하는 기본 통계값에는 다음과 같은 것들이 있다. 단, N은 홀수라고 가정하자.
@@ -48,60 +48,55 @@ public class Main_2108 {
 	}
 
 	private static void solve() throws Exception {
-		//1.숫자의 개수 N을 입력받는다.
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		
+		//주어지는 수의 개수 N
 		int N = Integer.parseInt(br.readLine());
 		
-		//2.결과를 저장할 변수를 선언한다.
-		int average = 0;   //산술평균
-		int center = 0;    //중앙값
-		int frequency = 0; //최빈값
-		int range = 0;     //범위
-		
-		//3.N개의 수를 입력 받아 map에 저장한다.
-		Map<Integer, Integer> map = new HashMap<>();
+		//입력받은 수의 배열
+		int[] input = new int[N];
 		
 		for(int i = 0; i < N; i++) {
-			map.put(Integer.parseInt(br.readLine()), map.getOrDefault(map, 0)+1);
+			input[i] = Integer.parseInt(br.readLine());
 		}
 		
-		//4.map의 정렬을 위해 key값을 List에 저장하고, 오름차순 정렬한다.
-		List<Integer> keyset = new ArrayList<>(map.keySet());
+		//입력받은 수의 배열을 오름차순으로 정렬
+		Arrays.sort(input);
 		
-		//5.key값 기준의 오름차순 정렬
-		Collections.sort(keyset); //입력된 숫자의 오름차순 정렬
+		//1.산술평균 (소수점 첫째자리 반올림)
+		int sum = 0;
+		for(int i : input) {
+			sum += i;
+		}
+		System.out.println(Math.round(sum/(float)N));
 		
-		//6.산술평균 값을 구한다.
-		for(Integer i : keyset) {average += i;}
-		average = average / N;
+		//2.중앙값
+		System.out.println(input[Math.round(N/2)]);
 		
-		//7.중앙값 (N은 반드시 홀수)
-		center = keyset.get(keyset.size() / 2);
+		//3.최빈값
+		Map<Integer, Integer> freMap = new HashMap<>();
+		for(int i = 0; i < N; i++) {
+			freMap.put(input[i], freMap.getOrDefault(input[i], 0)+1);
+		}
 		
-		//8.최빈값 : 여러개 있을 경우 두번째로 작은 값 출력
-		//8.1 map에서 value값의 최대값을 찾
-		Integer maxValue = Collections.max(map.values());
-		List<Integer> keyArray = new ArrayList<>(); //max value에 해당하는 키들을 저장한다.
+		int maxVal = Collections.max(freMap.values()); //가장 높은 빈도수
 		
-		for(Integer key : map.keySet()) {
-			if(map.get(key) == maxValue) {
-				keyArray.add(key);
+		List<Integer> maxValList = new ArrayList<>();
+		
+		for(Integer t : freMap.keySet()) {
+			if(freMap.get(t) == maxVal) {
+				maxValList.add(t);
 			}
 		}
 		
-		Collections.sort(keyArray); //오름순정렬 (value값이 같은 수들이 여러개일 경우 두번쨰로 작은 값을 찾기 위해 정렬)
-		
-		if(keyArray.size() > 1) {
-			frequency = keyArray.get(1);
+		if(maxValList.size() == 1) {
+			System.out.println(maxValList.get(0));
 		}else {
-			frequency = keyArray.get(0);
+			Collections.sort(maxValList);
+			System.out.println(maxValList.get(1));
 		}
-		//9.범위
-		range = keyset.get(keyset.size()-1) - keyset.get(0);
 		
-		System.out.println(average);
-		System.out.println(center);
-		System.out.println(frequency);
-		System.out.println(range);
+		//4.범위(최댓값 - 최솟값)
+		System.out.println(input[input.length-1]-input[0]);
 	}
 }
