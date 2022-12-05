@@ -1,7 +1,12 @@
 package baekjoon._14_bfs_dfs;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Main_7562 {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		// [백준] 7562 나이트의 이동 (그래프와 순회)
 		/*
 		 * 문제
@@ -47,15 +52,28 @@ public class Main_7562 {
 	static int[] tar = new int[2]; //(X, Y)일떄, 목표 위치의 (세로, 가로) 좌표
 	static int[][] map = null;
 	
-	private static void solve() {
-		L = 8;
-		cur[0] = 0; cur[1] = 0;
-		tar[0] = 7; tar[1] = 0;
+	private static void solve() throws Exception {
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		
-		map = new int[L][L];
-		map[cur[0]][cur[1]] = 1; //시작 
+		int testCase = Integer.parseInt(br.readLine());
 		
-		bfs();
+		for(int i = 0; i < testCase; i++) {
+			L = Integer.parseInt(br.readLine());
+			String[] curXY = br.readLine().split(" ");
+			String[] tarXY = br.readLine().split(" ");
+			
+			cur[0] = Integer.parseInt(curXY[0]);
+			cur[1] = Integer.parseInt(curXY[1]);
+			tar[0] = Integer.parseInt(tarXY[0]);
+			tar[1] = Integer.parseInt(tarXY[1]);
+			
+			map = new int[L][L]; //맵 초기화
+			map[cur[0]][cur[1]] = 0; //시작 
+			
+			bfs();
+			
+			System.out.println(map[tar[0]][tar[1]]);
+		}
 	}
 
 	private static void bfs() {
@@ -63,10 +81,56 @@ public class Main_7562 {
 			return;
 		}
 		
-		// 현재위치 기준
+		Queue<int[]> que = new LinkedList<>();
+		
+		// 현재위치 기준으로 이동 가능한 위치
 		// 위, 왼쪽 (-2,-1)    위, 오른쪽(-2, +1)
 		// 위, 왼쪽 (-1, -2)   위, 오른쪽(-1, +2)   
 		//아래, 왼쪽 (+1, -2)  아래, 오른쪽(+1, +2)
 		//아래, 왼쪽 (+2, -1)  아래, 오른쪽(+2, +1)
+		
+		que.add(cur); //현재 위치 큐에 넣기
+		
+		while(!que.isEmpty() && map[tar[0]][tar[1]] == 0) {
+			int[] t = que.poll();
+			int x = t[0];
+			int y = t[1];
+
+			if((x-2 >= 0 && x-2 < L) && (y-1 >= 0 && y-1 < L) && map[x-2][y-1] == 0) {
+				que.add(new int[] {x-2, y-1});
+				map[x-2][y-1] = map[x][y] + 1;
+			}
+			if((x-2 >= 0 && x-2 < L) && (y+1 >= 0 && y+1 < L) && map[x-2][y+1] == 0) {
+				que.add(new int[] {x-2, y+1});
+				map[x-2][y+1] = map[x][y] + 1;
+			}
+			
+			if((x-1 >= 0 && x-1 < L) && (y-2 >= 0 && y-2 < L) && map[x-1][y-2] == 0) {
+				que.add(new int[] {x-1, y-2});
+				map[x-1][y-2] = map[x][y] + 1;
+			}
+			if((x-1 >= 0 && x-1 < L) && (y+2 >= 0 && y+2 < L) && map[x-1][y+2] == 0) {
+				que.add(new int[] {x-1, y+2});
+				map[x-1][y+2] = map[x][y] + 1;
+			}
+
+			if((x+1 >= 0 && x+1 < L) && (y-2 >= 0 && y-2 < L) && map[x+1][y-2] == 0) {
+				que.add(new int[] {x+1, y-2});
+				map[x+1][y-2] = map[x][y] + 1;
+			}
+			if((x+1 >= 0 && x+1 < L) && (y+2 >= 0 && y+2 < L) && map[x+1][y+2] == 0) {
+				que.add(new int[] {x+1, y+2});
+				map[x+1][y+2] = map[x][y] + 1;
+			}
+			
+			if((x+2 >= 0 && x+2 < L) && (y-1 >= 0 && y-1 < L) && map[x+2][y-1] == 0) {
+				que.add(new int[] {x+2, y-1});
+				map[x+2][y-1] = map[x][y] + 1;
+			}
+			if((x+2 >= 0 && x+2 < L) && (y+1 >= 0 && y+1 < L) && map[x+2][y+1] == 0) {
+				que.add(new int[] {x+2, y+1});
+				map[x+2][y+1] = map[x][y] + 1;
+			}
+		}
 	}
 }
