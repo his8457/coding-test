@@ -45,13 +45,12 @@ public class Main_2178 {
 		solve();
 		
 	}
-
+	
 	static int N = 0; //미로의 세로 길이
 	static int M = 0; //미로의 가로 길이
 	
 	static boolean[][] visited = null;
-	static int[][] input = null;
-	static Queue<int[]> que = null;
+	static int[][] map = null;
 	
 	private static void solve() throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -60,43 +59,53 @@ public class Main_2178 {
 		M = Integer.parseInt(inputStr[1]);
 		
 		visited = new boolean[N][M];
-		input = new int[N][M];
-		que = new LinkedList<int[]>();
+		map = new int[N][M];
 		
+		//1. 미로 그리기
 		for(int i = 0; i < N; i++) {
 			String s = br.readLine();
 			for(int j = 0; j < M; j++) {
-				input[i][j] = s.charAt(j)-'0';
+				map[i][j] = s.charAt(j)-'0';
 			}
 		}
 		
-		bfs(0,0); //미로 시작 좌표(0,0) 부터 탐색 시작
+		//2. 미로 탐색 (시작 좌표(0,0) 부터 탐색 시작)
+		bfs(0,0); 
 		
-		System.out.println(input[N-1][M-1]);
+		//3. 결과 출력 (미로의 탈출 좌표에 도달 할때의 최소 이동 수)
+		System.out.println(map[N-1][M-1]);
 	}
 	
-	private static void bfs(int x, int y){
-		int[] q = {x, y};
-		que.add(q);
+	private static void bfs(int startX, int startY){
 		
-		visited[x][y] = true;
+		//1. Queue를 생성하고 시작좌표 값 삽입, 방문배열 시작좌표 true로 설정
+		Queue<int[]> que = new LinkedList<int[]>();
+		que.add(new int[] {startX, startY});
+		visited[startX][startY] = true;
 		
+		//2. 탐색 시작
 		while(!que.isEmpty()) {
 			int[] i = que.poll();
+			int curX = i[0];
+			int curY = i[1];
 			
-			int[][] k = new int[4][2];
-			k[0][0] = i[0]-1; k[0][1] = i[1];//위
-			k[1][0] = i[0]+1; k[1][1] = i[1];//아래
-			k[2][0] = i[0]; k[2][1] = i[1]-1;//왼쪽
-			k[3][0] = i[0]; k[3][1] = i[1]+1;//오른쪽
+			//현재위치를 기준으로 북, 남, 서, 동 4방위 좌표를 구함
+			int[][] points = new int[4][2];
+			points[0][0] = curX-1; points[0][1] = curY;  //위
+			points[1][0] = curX+1; points[1][1] = curY;  //아래
+			points[2][0] = curX;   points[2][1] = curY-1;//왼쪽
+			points[3][0] = curX;   points[3][1] = curY+1;//오른쪽
 			
-			for(int[] j : k) {
-				if(j[0] < 0 || j[1] < 0 || j[0] >= N || j[1] >= M || visited[j[0]][j[1]] || input[j[0]][j[1]] == 0) {
+			for(int[] j : points) {
+				int x = j[0];
+				int y = j[1];
+				
+				if(x < 0 || y < 0 || x >= N || y >= M || visited[x][y] || map[x][y] == 0) {
 					continue;
 				}else {
 					que.add(j);
-					visited[j[0]][j[1]] = true;
-					input[j[0]][j[1]] += input[i[0]][i[1]];
+					visited[x][y] = true;
+					map[x][y] += map[curX][curY];
 				}
 			}
 		}
