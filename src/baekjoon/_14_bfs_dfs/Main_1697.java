@@ -35,8 +35,8 @@ public class Main_1697 {
 		solve();
 	}
 
-	static int N; //시작위치
-	static int K; //목표위치
+	static int N; //시작위치(수빈)
+	static int K; //목표위치(동생)
 	static int MAX = 100000;
 	static int count = 0;
 	static boolean[] visited = new boolean[MAX+1];
@@ -58,8 +58,8 @@ public class Main_1697 {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		String[] str = br.readLine().split(" ");
 		
-		N = Integer.parseInt(str[0]); //시작위치
-		K = Integer.parseInt(str[1]); //목표위치
+		N = Integer.parseInt(str[0]); //시작위치(수빈)
+		K = Integer.parseInt(str[1]); //목표위치(동생)
 		
 		bfs(); //탐색시작
 		
@@ -67,54 +67,55 @@ public class Main_1697 {
 	}
 
 	private static void bfs() {
+		//※ 탐색 시작 시, 수빈이와 동생이 같은 위치에 있으면 탐색 종료
 		if(N == K) {
 			return;
 		}
 		
 		// 1.시작 노드를 Queue에 넣고 탐색 시작
 		Queue<ArrayList<Integer>> que = new LinkedList<>();
-		ArrayList<Integer> nextNodes = new ArrayList<>();
-		nextNodes.add(N);
-		que.add(nextNodes);
+		ArrayList<Integer> nextP = new ArrayList<>();
+		nextP.add(N);
+		que.add(nextP);
 		
-		visited[N] = true;
+		visited[N] = true; //시작위치 방문여부 true로 설정
 		boolean isFind = false; //목표 위치 도착 여부
 		
-		// 2.현재 노드들의 -1위치, +1위치, *2 위치 및 목표위치에 도달여부를 확인
+		// 2.탐색 시작 : 현재 노드들의 -1위치, +1위치, *2 위치 및 목표위치에 도달여부를 확인
 		while(!que.isEmpty() && !isFind) {
-			ArrayList<Integer> curNodes = que.poll();
-			nextNodes = new ArrayList<>();
+			ArrayList<Integer> curP = que.poll();
+			nextP = new ArrayList<>();
 			
-			for(int i = 0; i < curNodes.size(); i++) {
-				int node = curNodes.get(i);
+			for(int i = 0; i < curP.size(); i++) {
+				int p = curP.get(i);
 				
-				if(node == K) {//현재 노드의 위치와 목표 노드의 위치가 같은지 확인
+				if(p == K) {//현재 위치와 목표 위치가 같은지 확인
 					isFind = true;
 					break;
 				}
 				
-				if(node-1 >= 0 && node-1 <= MAX && !visited[node-1]) {
-					nextNodes.add(node-1);
-					visited[node-1] = true;
-					if(node-1 == K) {
+				if(p-1 >= 0 && p-1 <= MAX && !visited[p-1]) {
+					nextP.add(p-1);
+					visited[p-1] = true;
+					if(p-1 == K) {
 						isFind = true;
 						break;
 					}
 				}
 				
-				if(node+1 >= 0 && node+1 <= MAX && !visited[node+1]) {
-					nextNodes.add(node+1);
-					visited[node+1] = true;
-					if(node+1 == K) {
+				if(p+1 >= 0 && p+1 <= MAX && !visited[p+1]) {
+					nextP.add(p+1);
+					visited[p+1] = true;
+					if(p+1 == K) {
 						isFind = true;
 						break;
 					}
 				}
 				
-				if(node*2 >= 0 && node*2 <= MAX && !visited[node*2]) {
-					nextNodes.add(node*2);
-					visited[node*2] = true;
-					if(node*2 == K) {
+				if(p*2 >= 0 && p*2 <= MAX && !visited[p*2]) {
+					nextP.add(p*2);
+					visited[p*2] = true;
+					if(p*2 == K) {
 						isFind = true;
 						break;
 					}
@@ -122,8 +123,8 @@ public class Main_1697 {
 			}
 			
 			// 3.다음 탐색 노드들을 queue에 넣음
-			if(nextNodes.size() > 0) {
-				que.add(nextNodes);
+			if(nextP.size() > 0) {
+				que.add(nextP);
 			}
 			
 			count++;
