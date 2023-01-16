@@ -1,7 +1,10 @@
 package baekjoon._19_greedy;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 public class Main_1541 {
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception {
 		// [백준] 1541 잃어버린 괄호
 		/*
 		 * 문제
@@ -21,7 +24,7 @@ public class Main_1541 {
 			55-50+40
 			예제 출력 1 
 			-35
-			예제 입력 2 
+			예제 입력 2 +
 			10+20+30+40
 			예제 출력 2 
 			100
@@ -34,7 +37,52 @@ public class Main_1541 {
 		solve();
 	}
 
-	private static void solve() {
+	private static void solve() throws Exception{
+		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+		String input = br.readLine();
 		
+		String tempNum = "";
+		boolean isOne = true;
+		boolean isMinus = false;
+		int result = 0;
+		
+		//1.식에 주어진 수의 개수 확인
+		//주어진 문자열의 앞에서부터 탐색하면서 '+' 문자 또는 '-' 문자가 나올 때까지 탐색한다. 
+		//'-' 문자가 나오기 이전까지의 수는 결과 변수에 더하고 '-' 문자가 나온 이후의 숫자는 뺀다.
+		for(int i = 0; i < input.length(); i++) {
+			if(input.charAt(i)-'0' >= 0) {
+				tempNum += input.charAt(i);
+			}
+			
+			if(isMinus) {
+				if(input.charAt(i) == '+' || input.charAt(i) == '-') {
+					result += (Integer.parseInt(tempNum) * -1);
+					tempNum = "";
+				}
+			}else {
+				if(input.charAt(i) == '-') {
+					isMinus = true;
+				}
+				
+				if(input.charAt(i) == '+' || input.charAt(i) == '-') {
+					isOne = false;
+					result += Integer.parseInt(tempNum);
+					tempNum = "";
+				}
+			}
+		}
+		
+		if(isOne) { //2-1. 식에 주어진 수가 1개일 경우
+			System.out.println(Integer.parseInt(input));
+			return;
+		}else { //2-2. 식에 주어진 수가 최소 2개 이상인 경우
+			if(isMinus) {// '-' 부호가 확인된 경우 
+				result += (Integer.parseInt(tempNum) * -1);
+			}else {
+				result += Integer.parseInt(tempNum);
+			}
+		}
+		
+		System.out.println(result);
 	}
 }
